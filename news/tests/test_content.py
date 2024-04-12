@@ -37,15 +37,15 @@ class TestHomePage(TestCase):
 
 
     def test_news_count(self):
-            # Загружаем главную страницу.
-            response = self.client.get(self.HOME_URL)
-            # Код ответа не проверяем, его уже проверили в тестах маршрутов.
-            # Получаем список объектов из словаря контекста.
-            object_list = response.context['object_list']
-            # Определяем количество записей в списке.
-            news_count = object_list.count()
-            # Проверяем, что на странице именно 10 новостей.
-            self.assertEqual(news_count, settings.NEWS_COUNT_ON_HOME_PAGE)
+        # Загружаем главную страницу.
+        response = self.client.get(self.HOME_URL)
+        # Код ответа не проверяем, его уже проверили в тестах маршрутов.
+        # Получаем список объектов из словаря контекста.
+        object_list = response.context['object_list']
+        # Определяем количество записей в списке.
+        news_count = object_list.count()
+        # Проверяем, что на странице именно 10 новостей.
+        self.assertEqual(news_count, settings.NEWS_COUNT_ON_HOME_PAGE)
 
     def test_news_order(self):
         response = self.client.get(self.HOME_URL)

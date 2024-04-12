@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import include, path
 from django.views.generic import CreateView
+from django.conf import settings
 
 urlpatterns = [
     path('', include('news.urls')),
