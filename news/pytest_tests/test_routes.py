@@ -13,7 +13,7 @@ from django.urls import reverse
 6Страницы регистрации пользователей, входа в учётную запись и выхода из неё доступны анонимным пользователям."""
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.parametrize(
     "name", ("news:home",),
 )
@@ -24,7 +24,7 @@ def test_homepage_availability_for_anonymous_user(client, name):
     assert response.status_code == HTTPStatus.OK
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.parametrize("name", ("news:detail",),)
 def test_detailpage_availability_for_anonymous_user(news, client, name):
     """Страница отдельной новости доступна анонимному пользователю"""
@@ -33,7 +33,7 @@ def test_detailpage_availability_for_anonymous_user(news, client, name):
     assert response.status_code == HTTPStatus.OK
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.parametrize(
     "parametrized_client, expected_status",
     (
@@ -51,7 +51,7 @@ def test_availability_comment_edit_delete_for_author(name, author_client, commen
     assert response.status_code == HTTPStatus.OK
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.parametrize("name", ("users:login", "users:logout", "users:signup"),)
 def test_availability_login_logout_pages(name, client):
     """Страницы регистирации, выхода, входа анонимному пользователю"""
@@ -60,7 +60,7 @@ def test_availability_login_logout_pages(name, client):
     assert response.status_code == HTTPStatus.OK
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.parametrize(
     'name',('news:edit', 'news:delete'),
     )

@@ -41,7 +41,7 @@ def news():
 
 @pytest.fixture
 def comment(author, news):
-    comment = Comment(
+    comment = Comment.objects.create(
         text='Первый комментарий',
         news=news,
         author=author,

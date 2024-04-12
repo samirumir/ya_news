@@ -8,13 +8,6 @@ from news.models import Comment
 from news.forms import BAD_WORDS, WARNING
 
 
-"""1Анонимный пользователь не может отправить комментарий.
-2Авторизованный пользователь может отправить комментарий.
-3Если комментарий содержит запрещённые слова, он не будет опубликован, а форма вернёт ошибку.
-4Авторизованный пользователь может редактировать или удалять свои комментарии.
-5Авторизованный пользователь не может редактировать или удалять чужие комментарии"""
-
-# @pytest.mark.skip
 @pytest.mark.django_db
 def test_anonymous_user_cant_create_comment(client, form_data, news):
     """Анонимный пользователь не может отправить комментарий"""
@@ -26,7 +19,6 @@ def test_anonymous_user_cant_create_comment(client, form_data, news):
     assert Comment.objects.count() == 0
 
 
-# @pytest.mark.skip
 def test_user_can_create_comment(author_client, author, form_data, news):
     """Авторизованный пользователь может отправить комментарий"""
     url = reverse("news:detail", args=(news.id,))
@@ -40,7 +32,6 @@ def test_user_can_create_comment(author_client, author, form_data, news):
     assert new_comment.author == author
 
 
-# @pytest.mark.skip
 def test_comment_cant_include_bad_words(author_client, news):
     bad_words_data = {'text': f'Какой-то текст, {BAD_WORDS[0]}, еще текст'}
     url = reverse("news:detail", args=(news.id,))
@@ -48,35 +39,33 @@ def test_comment_cant_include_bad_words(author_client, news):
     assertFormError(response, form="form", field="text", errors=WARNING)
 
 
-# @pytest.mark.skip
 def test_author_can_edit_own_comment(author_client, form_data, comment, news):
     url = reverse("news:edit", args=(comment.id,))
     response = author_client.post(url, form_data)
-    assertRedirects(response, reverse("news:detail", args=(news.id)))
+    url_redirect = reverse("news:detail", args=(news.id,))
+    assertRedirects(response, f'{url_redirect}#comments')
     comment.refresh_from_db()
     assert comment.text == form_data["text"]
 
 
-# @pytest.mark.skip
-def test_author_can_delete_own_comment(auhtor_client, comment, news):
-    url = reverse("news:delete", args=(comment.pk,))
-    response = auhtor_client.post(url)
-    assertRedirects(response, reverse("news:detail", args=(news.id)))
+def test_author_can_delete_own_comment(author_client, comment, news):
+    url = reverse("news:delete", args=(comment.id,))
+    response = author_client.delete(url)
+    url_redirect = reverse("news:detail", args=(news.id,))
+    assertRedirects(response, f'{url_redirect}#comments')
     assert Comment.objects.count() == 0
 
 
-# @pytest.mark.skip
-def test_not_author_cant_edit_own_comment(not_auhtor_client, form_data, comment):
-    url = reverse("news:edit", args=(comment.id,))
-    response = not_auhtor_client.post(url, form_data)
+def test_user_cant_edit_other_comment(not_author_client, form_data, comment):
+    url = reverse('news:edit', args=(comment.id,))
+    response = not_author_client.post(url, form_data)
     assert response.status_code == HTTPStatus.NOT_FOUND
     comment_from_db = Comment.objects.get(id=comment.id)
     assert comment.text == comment_from_db.text
 
 
-# @pytest.mark.skip
-def test_not_author_cant_delete_own_comment(not_auhtor_client, comment):
-    url = reverse("news:delete", args=(comment.id,))
-    response = not_auhtor_client.post(url)
+def test_user_cant_delete_other_comment(not_author_client, comment):
+    url = reverse('news:delete', args=(comment.id,))
+    response = not_author_client.delete(url)
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert Comment.objects.count() == 1

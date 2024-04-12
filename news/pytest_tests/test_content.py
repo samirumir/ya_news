@@ -1,6 +1,4 @@
-from http import HTTPStatus
 import pytest
-from pytest_django.asserts import assertRedirects, assertNotContains
 from datetime import datetime, timedelta
 from django.conf import settings
 
@@ -38,8 +36,8 @@ def test_news_order_on_homepage(client):
     today = datetime.today()
     News.objects.bulk_create(
         News(title=f'Новость {index}',
-            text='Просто текст.',
-            date=today-timedelta(days=index))
+             text='Просто текст.',
+             date=today - timedelta(days=index))
         for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
     )
     url = reverse("news:home")
@@ -56,8 +54,8 @@ def test_news_count(client):
     today = datetime.today()
     News.objects.bulk_create(
         News(title=f'Новость {index}',
-            text='Просто текст.',
-            date=today-timedelta(days=index))
+             text='Просто текст.',
+             date=today - timedelta(days=index))
         for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
     )
     url = reverse("news:home")
@@ -75,7 +73,7 @@ def test_comment_order_on_detailpage(client, news, author):
     Comment.objects.bulk_create(
         Comment(text=f'Комментарий {index}',
                 news=news,
-                created=today-timedelta(days=index),
+                created=today - timedelta(days=index),
                 author=author)
         for index in range(NUMBER_OF_COMMENT)
     )
